@@ -1,0 +1,41 @@
+import os
+
+Import('env')
+Import('WITH_GPU')
+
+env.Program('born_radii', 'born_radii.cpp')
+#env.Program("born_radii_membrane", "born_radii_membrane.cpp")
+#env.Program('gb_energy', 'gb_energy.cpp')
+env.Program('timings', 'timings.cpp')
+#env.Program('test_powerdiagram', 'test_powerdiagram.cpp')
+#env.Program('test_sasa', 'test_sasa.cpp')
+env.Program('test', 'test.cpp')
+
+if WITH_GPU:
+    gpu_files = [os.path.join("../gpu", x) for x in ['PowerBornGPU.cpp', 'ForcefieldParams.cpp', 'Task.cpp']]
+    gpu_files.append("born_radii_gpu.cpp")
+    env.Program('born_radii_gpu', gpu_files)
+
+    gpu_files = gpu_files[:-1]
+    gpu_files.append("sasa_gpu.cpp")
+    env.Program('sasa_gpu', gpu_files)
+
+    gpu_files = gpu_files[:-1]
+    gpu_files.append("gb_energy_gpu.cpp")
+    env.Program('gb_energy_gpu', gpu_files)
+
+    gpu_files = gpu_files[:-1]
+    gpu_files.append("timings_gpu.cpp")
+    env.Program('timings_gpu', gpu_files)
+
+    gpu_files = gpu_files[:-1]
+    gpu_files.append("test_integrator.cpp")
+    env.Program('test_integrator', gpu_files)
+
+    gpu_files = gpu_files[:-1]
+    gpu_files.append("rotation_test_gpu.cpp")
+    env.Program('rotation_test_gpu', gpu_files)
+
+    gpu_files = gpu_files[:-1]
+    gpu_files.append("debug_dumps_gpu.cpp")
+    env.Program('debug_dumps_gpu', gpu_files)

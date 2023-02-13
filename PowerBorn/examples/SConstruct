@@ -1,0 +1,21 @@
+import os
+
+EIGEN_DIR = "../../Eigen"
+WITH_GPU = False
+ocl_inc = "../../icdloader/include"
+ocl_lib = "../../icdloader/linux/lib"
+
+env = Environment(ENV= os.environ, tools = ["default"],toolpath=".", CPPPATH= ['../', "../../pdsasa/include", ocl_inc, EIGEN_DIR],LIBPATH= [ocl_lib], LINKFLAGS=[], LIBS=['gomp'])
+
+if WITH_GPU:
+    env.Append(CPPPATH=['../gpu', '/opt/AMDAPP/include', '../../../include', '../../'])
+    env.Append(LIBPATH=['/opt/AMDAPP/lib/x86_64'])
+    env.Append(LIBS=['OpenCL'])
+
+#CCFLAGS
+env.Append(CCFLAGS='-std=c++0x -O3 -g -fopenmp -pedantic -DNDEBUG -Wall -W -Wno-unused-local-typedefs')
+#env.Append(CCFLAGS='-std=c++0x -O0 -g -fopenmp -pedantic -DDEBUG_POWERBORN_PARALLEL -W -Wall')
+
+Export('WITH_GPU')
+Export('env')
+SConscript('SConscript')
